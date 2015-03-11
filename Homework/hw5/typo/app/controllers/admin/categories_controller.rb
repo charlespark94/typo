@@ -25,15 +25,10 @@ class Admin::CategoriesController < Admin::BaseController
 
   def new_or_edit
     @categories = Category.find(:all)
-	#change for bug fix CS169.2x, try ||= ?
-	@category = case params[:id]
-	           when nil
-			     Category.new
-			   else
-			     Category.find(params[:id])
-			   end
-	@category.attributes = params[:category]
-    if request.post?
+    #@category = Category.find(params[:id])
+    @category = params[:id] ? Category.find(params[:id]) : Category.new
+    @category.attributes = params[:category]
+    if request.post? and @category
       respond_to do |format|
         format.html { save_category }
         format.js do 

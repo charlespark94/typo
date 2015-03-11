@@ -71,6 +71,20 @@ class Article < Content
     end
   end
 
+  def merge_with(article_id)
+    merge_article = Article.find_by_id(article_id)
+    self.body += merge_article.body
+    
+    merge_article.comments.each { |c|
+	  c.article_id = self.id  
+	  c.save!
+	}
+    self.save!
+    merge_article.reload
+    merge_article.destroy
+    self
+  end  
+
   def set_permalink
     return if self.state == 'draft'
     self.permalink = self.title.to_permalink if self.permalink.nil? or self.permalink.empty?
@@ -79,17 +93,6 @@ class Article < Content
   def has_child?
     Article.exists?({:parent_id => self.id})
   end
-
-#  def merge_with(id)
-#    article_to_be_merged = Article.find_by_id(id)
-#    merged_body = article_to_be_merged.body + "<br/>" + self.body
-#    article_to_be_merged.update_attribute(:body, merged_body)
-#    Comment.find_all_by_article_id(self.id).each do |c|
-#      article_to_be_merged.comments << c
-#    end
-#    article_to_be_merged.save
-#    self.delete
-#  end
 
   attr_accessor :draft, :keywords
 
@@ -114,20 +117,6 @@ class Article < Content
       article
     end
 
-	def merge_with(first_id, second_id)
-      article_main = Article.find(first_id)
-      article_merged = Article.find(second_id)
-      article_merged.body = article_merged.title + "<br>" + article_merged.body
-      article_main.body += article_merged.body
-      article_main.save
-      article_main.comments << article_merged.comments
-      Article.destroy(second_id)
-      article_main
-    end
-	
-	
-	
-	
     def search_with_pagination(search_hash, paginate_hash)
       
       state = (search_hash[:state] and ["no_draft", "drafts", "published", "withdrawn", "pending"].include? search_hash[:state]) ? search_hash[:state] : 'no_draft'

@@ -36,13 +36,13 @@ Given /^the blog is set up$/ do
                                    :base_url => 'http://localhost:3000'});
   Blog.default.save!
   User.create!({:login => 'admin',
-                :password => 'abc123',
+                :password => 'aaaaaaaa',
                 :email => 'joe@snow.com',
                 :profile_id => 1,
                 :name => 'admin',
                 :state => 'active'})
   User.create!({:login => 'user',
-				:password => 'abc123',
+				:password => 'aaaaaaaa',
 				:email => 'bob@snow.com',
 				:profile_id => 2,
 				:name => 'user',
@@ -52,7 +52,7 @@ end
 And /^I am logged into the admin panel$/ do
   visit '/accounts/login'
   fill_in 'user_login', :with => 'admin'
-  fill_in 'user_password', :with => 'abc123'
+  fill_in 'user_password', :with => 'aaaaaaaa'
   click_button 'Login'
   if page.respond_to? :should
     page.should have_content('Login successful')
@@ -65,7 +65,7 @@ And /^I log into the admin panel$/ do
   visit '/accounts/logout'
   visit '/accounts/login'
   fill_in 'user_login', :with => 'admin'
-  fill_in 'user_password', :with => 'abc123'
+  fill_in 'user_password', :with => 'aaaaaaaa'
   click_button 'Login'
   if page.respond_to? :should
     page.should have_content('Login successful')
@@ -78,7 +78,7 @@ Given /^I am logged into the user panel$/ do
   visit '/accounts/logout'
   visit '/accounts/login'
   fill_in 'user_login', :with => 'user'
-  fill_in 'user_password', :with => 'abc123'
+  fill_in 'user_password', :with => 'aaaaaaaa'
   click_button 'Login'
   if page.respond_to? :should
     page.should have_content('Login successful')
